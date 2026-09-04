@@ -10,7 +10,7 @@ const faqs = [
   { q: "¿Hay límite de edad?", a: "A confirmar con el teatro." },
   { q: "¿Dónde compro entradas?", a: `Por ahora, exclusivamente por Instagram (${siteConfig.social.instagramHandle}).` },
   { q: "¿Cómo me entero de las próximas funciones?", a: "Instagram es la vía más actualizada; acá sumamos fechas a medida que el teatro las confirma." },
-  { q: "¿Sos prensa o programador?", a: "Ver Sala de Prensa, o la sección de Booking más abajo." },
+  { q: "¿Sos prensa o programador?", a: "Completá el formulario de Booking, más arriba, o escribinos por Instagram." },
 ];
 
 const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(

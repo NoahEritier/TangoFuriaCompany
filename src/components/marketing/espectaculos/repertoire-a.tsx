@@ -45,16 +45,15 @@ export function RepertoireA() {
             const premiere = premiereLabel(show);
             return (
               <Reveal key={show.slug} delay={i * 100}>
-                <div className="group">
+                <div>
                   <div
-                    className="h-[360px] sm:h-[420px] lg:h-[460px] transition-transform duration-500 ease-out group-hover:-translate-y-1.5"
+                    className="h-[360px] sm:h-[420px] lg:h-[460px]"
                     style={{ position: "relative", overflow: "hidden", boxShadow: "0 30px 70px rgba(0,0,0,.5)" }}
                   >
                     <Image
                       src={cardImages[show.slug]}
                       alt={show.title}
                       fill
-                      className="transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                       style={{ objectFit: "cover" }}
                       sizes="(min-width: 640px) 50vw, 100vw"
                     />

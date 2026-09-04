@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 /**
  * Envuelve una sección para que aparezca con un fade + leve translateY
@@ -13,10 +13,12 @@ export function Reveal({
   children,
   delay = 0,
   className,
+  style,
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
+  style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -42,6 +44,7 @@ export function Reveal({
       ref={ref}
       className={className}
       style={{
+        ...style,
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(22px)",
         transition: `opacity .7s cubic-bezier(.2,.7,.2,1) ${delay}ms, transform .7s cubic-bezier(.2,.7,.2,1) ${delay}ms`,

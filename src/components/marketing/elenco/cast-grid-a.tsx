@@ -40,17 +40,14 @@ export function CastGridA() {
         <div className="grid md:grid-cols-3" style={{ gap: 24 }}>
           {cast.map((member, i) => (
             <Reveal key={member.name} delay={i * 100}>
-              <div className="group">
+              <div>
                 <div
-                  className="grayscale contrast-125 transition-[filter,transform] duration-500 ease-out hover:grayscale-0 hover:contrast-100 group-hover:-translate-y-1"
+                  className="grayscale contrast-125"
                   style={{ position: "relative", aspectRatio: "3 / 4", overflow: "hidden" }}
                 >
                   <PlaceholderImage label={member.placeholderLabel} dark fill />
                 </div>
-                <div
-                  className="w-7 transition-all duration-400 group-hover:w-10"
-                  style={{ marginTop: 16, height: 3, background: color.furia }}
-                />
+                <div className="w-7" style={{ marginTop: 16, height: 3, background: color.furia }} />
                 <div style={{ marginTop: 14, fontFamily: font.display, fontWeight: 320, fontSize: 21, lineHeight: 1.1, color: color.hueso }}>
                   {member.name}
                 </div>

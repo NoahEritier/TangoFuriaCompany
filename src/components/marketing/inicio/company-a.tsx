@@ -20,7 +20,6 @@ export function CompanyA() {
           src={photo.coupleDramatic}
           alt="Pareja en movimiento, Tango Furia Company"
           fill
-          className="transition-transform duration-[1200ms] ease-out hover:scale-105"
           style={{ objectFit: "cover" }}
           sizes="(min-width: 768px) 40vw, 100vw"
         />

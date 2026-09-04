@@ -50,7 +50,7 @@ export function TimelineA() {
             const { year, precise } = parseMilestoneDate(m.date);
             return (
               <Reveal key={m.id} delay={i * 80}>
-                <div className="group" style={{ position: "relative", paddingTop: 34, borderTop: "1px solid rgba(27,21,18,.18)" }}>
+                <div style={{ position: "relative", paddingTop: 34, borderTop: "1px solid rgba(27,21,18,.18)" }}>
                   <div style={{ position: "absolute", left: 0, top: -4, width: 7, height: 7, borderRadius: "50%", background: color.furia }} />
                   <div style={{ fontFamily: font.display, fontWeight: 320, fontSize: 32, lineHeight: 1, color: color.furia }}>{year}</div>
                   {precise && (
@@ -58,10 +58,7 @@ export function TimelineA() {
                       {precise}
                     </div>
                   )}
-                  <div
-                    className="transition-transform duration-500 ease-out group-hover:-translate-y-1"
-                    style={{ position: "relative", aspectRatio: "4 / 3", overflow: "hidden", margin: "22px 0 18px" }}
-                  >
+                  <div style={{ position: "relative", aspectRatio: "4 / 3", overflow: "hidden", margin: "22px 0 18px" }}>
                     <PlaceholderImage fill dark={false} label="Foto de archivo — pendiente" />
                   </div>
                   <div style={{ fontFamily: font.display, fontWeight: 320, fontSize: 19, lineHeight: 1.2 }}>{m.title}</div>

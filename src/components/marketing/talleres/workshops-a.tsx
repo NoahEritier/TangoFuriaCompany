@@ -4,11 +4,20 @@ import { PlaceholderImage, ExampleBadge } from "@/components/ui/placeholder-imag
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal } from "@/components/ui/reveal";
 
+// Horarios reales de clase, provistos directamente por el cliente (no son
+// dato de prensa, pero tampoco están inventados).
+const schedule = [
+  { days: "Lunes, miércoles y viernes", time: "18:00", place: "Club Mitre" },
+  { days: "Sábados", time: "18:30", place: "Club Náutico" },
+  { days: "Martes · Tango Escenario", time: "17:00" },
+];
+
 /**
  * Dirección 1a — Noche. Sección "Talleres y formación" del handoff
- * (líneas ~386-407). Dos columnas: texto + CTA a la izquierda, collage
- * de fotos 2x2 a la derecha. Las tres fotos son `<image-slot>` vacíos en
- * el mockup — no hay fotografía real asignada todavía.
+ * (líneas ~386-407). Dos columnas: texto + CTA a la izquierda, collage a la
+ * derecha — la celda grande es la lista de horarios (dato real del
+ * cliente), las otras dos son `<image-slot>` sin fotografía asignada
+ * todavía.
  */
 export function WorkshopsA() {
   return (
@@ -77,32 +86,40 @@ export function WorkshopsA() {
           </div>
         </Reveal>
       </div>
-      <Reveal delay={150} className="grid grid-cols-2 gap-2 p-2">
-        <div className="group relative row-span-2 overflow-hidden">
-          <PlaceholderImage
-            label="Manos en el abrazo, luz de ventana"
-            dark
-            fill
-            className="transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          />
-        </div>
-        <div className="group relative aspect-square overflow-hidden">
-          <PlaceholderImage
-            label="Pies en el piso de madera"
-            dark
-            fill
-            className="transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          />
-        </div>
-        <div className="group relative aspect-square overflow-hidden">
-          <PlaceholderImage
-            label="Clase en ronda, corrección de postura"
-            dark
-            fill
-            className="transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          />
-        </div>
-      </Reveal>
+      <div className="flex items-center justify-center p-6 md:p-10">
+        <Reveal delay={150} className="grid grid-cols-2 gap-5 md:gap-6" style={{ width: "100%", maxWidth: 560 }}>
+          <div
+            className="row-span-2 flex flex-col justify-center"
+            style={{ padding: "30px 26px", background: color.nocheDeep, border: "1px solid rgba(243,237,228,.12)" }}
+          >
+            <Eyebrow color={color.ambar} marginBottom={22}>
+              Horarios
+            </Eyebrow>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {schedule.map((item, i) => (
+                <div
+                  key={item.days}
+                  style={{ padding: i === 0 ? "0 0 22px" : "22px 0", borderTop: i === 0 ? undefined : "1px solid rgba(243,237,228,.12)" }}
+                >
+                  <div style={{ fontFamily: font.display, fontWeight: 320, fontSize: 24, lineHeight: 1.05, color: color.hueso }}>
+                    {item.time}
+                  </div>
+                  <div style={{ marginTop: 7, fontFamily: font.body, fontSize: 13.5, lineHeight: 1.5, color: "rgba(243,237,228,.65)" }}>
+                    {item.days}
+                    {item.place ? ` · ${item.place}` : ""}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative aspect-square overflow-hidden">
+            <PlaceholderImage label="Pies en el piso de madera" dark fill />
+          </div>
+          <div className="relative aspect-square overflow-hidden">
+            <PlaceholderImage label="Clase en ronda, corrección de postura" dark fill />
+          </div>
+        </Reveal>
+      </div>
     </div>
   );
 }
