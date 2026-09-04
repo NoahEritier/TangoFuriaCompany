@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+  html,body,#map{margin:0;height:100%;background:#F3EDE4}
+  .leaflet-tile-pane{filter:grayscale(1) sepia(.18) brightness(1.04) contrast(.92)}
+  .leaflet-control-attribution{font:10px 'IBM Plex Sans',sans-serif;background:rgba(243,237,228,.85);color:#1B1512}
+  .pin{width:16px;height:16px;border-radius:50%;background:#8A1332;box-shadow:0 0 0 6px rgba(138,19,50,.22),0 10px 24px rgba(27,21,18,.35)}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  const c=[-37.9976,-57.5497]; // Teatro Municipal Colón, Hipólito Yrigoyen 1665 (geocoded)
+  const map=L.map('map',{zoomControl:false,scrollWheelZoom:false,attributionControl:true}).setView(c,16);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:19}).addTo(map);
+  L.marker(c,{icon:L.divIcon({className:'',html:'<div class="pin"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).addTo(map);
+</script>
+</body>
+</html>

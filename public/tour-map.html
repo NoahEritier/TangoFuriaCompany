@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<style>
+  html,body{margin:0;height:100%;background:transparent;overflow:hidden}
+  svg{display:block;width:100%;height:100%}
+  .label{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;pointer-events:none}
+  .name{font-family:Fraunces,serif;pointer-events:none}
+  .city{cursor:pointer}
+  .tip{opacity:0;transition:opacity .3s}
+  .city:hover .tip{opacity:1}
+  .dot{transition:transform .3s;transform-box:fill-box;transform-origin:center}
+  .city:hover .dot{transform:scale(1.5)}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .arc{fill:none;stroke-width:1.2;stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 2.2s cubic-bezier(.2,.7,.2,1) forwards}
+</style>
+</head>
+<body>
+<svg id="m" preserveAspectRatio="xMidYMid meet"></svg>
+<script>
+(async () => {
+  const q = new URLSearchParams(location.search);
+  const dark = q.get('theme') !== 'light';
+  // Layout mode is passed in by the embedding page (which measures its own
+  // rendered width) instead of guessed here from window size, so the SVG
+  // viewBox always matches the wrapper's aspect-ratio exactly — see
+  // TourA/TourB's `mobileMap` state.
+  const mobile = q.get('layout') === 'mobile';
+  const C = dark
+    ? { land:'#F3EDE4', landOp:.12, stroke:'rgba(243,237,228,.25)', accent:'#C9A227', text:'#F3EDE4', muted:'rgba(243,237,228,.55)', home:'#8A1332', frame:'rgba(243,237,228,.22)', insetBg:'rgba(243,237,228,.03)' }
+    : { land:'#1B1512', landOp:.10, stroke:'rgba(27,21,18,.25)', accent:'#8A1332', text:'#1B1512', muted:'rgba(27,21,18,.6)', home:'#8A1332', frame:'rgba(27,21,18,.22)', insetBg:'rgba(27,21,18,.03)' };
+  const svg=d3.select('#m');
+  const topo=await (await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json')).json();
+  const land=topojson.feature(topo,topo.objects.countries);
+  const home=[-57.55,-38.0], mumbai=[72.88,19.08], poland=[20.5,51.2];
+
+  if (mobile) {
+    // Stacked layout for phones/narrow tablets: world map on top, Poland
+    // inset below, in a taller/narrower viewBox — so text renders large
+    // enough to read instead of shrinking a ~1328px-wide layout down to a
+    // ~360px screen. Text anchors flip based on which half of the map a
+    // point falls in, so labels never run off the edge.
+    const W=400, H=650;
+    svg.attr('viewBox',`0 0 ${W} ${H}`);
+    const mid=W/2;
+
+    const proj=d3.geoNaturalEarth1().rotate([-10,0]).fitExtent([[16,16],[W-16,230]],{type:'Sphere'});
+    const path=d3.geoPath(proj);
+    const world=svg.append('g');
+    world.append('path').datum({type:'Sphere'}).attr('d',path).attr('fill','none').attr('stroke',C.stroke).attr('stroke-width',.6);
+    world.selectAll('path.l').data(land.features).join('path').attr('d',path).attr('fill',C.land).attr('fill-opacity',C.landOp).attr('stroke',C.stroke).attr('stroke-width',.5);
+
+    const line=d3.geoPath(proj);
+    [[mumbai,0],[poland,.5]].forEach(([t,d])=>world.append('path').datum({type:'LineString',coordinates:[home,t]}).attr('d',line).attr('class','arc').attr('stroke',C.accent).style('animation-delay',d+'s'));
+
+    const [hx,hy]=proj(home);
+    world.append('circle').attr('cx',hx).attr('cy',hy).attr('r',6).attr('fill',C.home);
+    world.append('circle').attr('cx',hx).attr('cy',hy).attr('r',14).attr('fill','none').attr('stroke',C.home).attr('stroke-opacity',.4);
+    const hAnchor = hx>mid ? 'end' : 'start', hdx = hx>mid ? -16 : 16;
+    world.append('text').attr('class','name').attr('font-size',19).attr('x',hx+hdx).attr('y',hy+6).attr('text-anchor',hAnchor).attr('fill',C.text).text('Mar del Plata');
+    world.append('text').attr('class','label').attr('x',hx+hdx).attr('y',hy+24).attr('text-anchor',hAnchor).attr('fill',C.muted).text('Sede · Argentina');
+
+    const [mx,my]=proj(mumbai);
+    const mAnchor = mx>mid ? 'end' : 'start', mdx = mx>mid ? -12 : 12;
+    const gm=world.append('g').attr('transform',`translate(${mx},${my})`);
+    gm.append('circle').attr('r',5).attr('fill',C.accent);
+    gm.append('text').attr('class','name').attr('font-size',16).attr('x',mdx).attr('y',-6).attr('text-anchor',mAnchor).attr('fill',C.text).text('Mumbai');
+    gm.append('text').attr('class','label').attr('x',mdx).attr('y',12).attr('text-anchor',mAnchor).attr('fill',C.accent).text('Festival Mood Indigo');
+
+    const [px,py]=proj(poland);
+    const pAnchor = px>mid ? 'end' : 'start', pdx = px>mid ? -12 : 12;
+    world.append('circle').attr('cx',px).attr('cy',py).attr('r',5).attr('fill',C.accent);
+    world.append('circle').attr('cx',px).attr('cy',py).attr('r',11).attr('fill','none').attr('stroke',C.accent).attr('stroke-opacity',.5);
+    world.append('text').attr('class','name').attr('font-size',16).attr('x',px+pdx).attr('y',py-10).attr('text-anchor',pAnchor).attr('fill',C.text).text('Polonia');
+    world.append('text').attr('class','label').attr('x',px+pdx).attr('y',py+6).attr('text-anchor',pAnchor).attr('fill',C.muted).text('4 ciudades');
+
+    // ---- Poland inset (below)
+    const IX=16, IY=250, IW=W-32, IH=340;
+    const inset=svg.append('g');
+    inset.append('rect').attr('x',IX).attr('y',IY).attr('width',IW).attr('height',IH).attr('fill',C.insetBg).attr('stroke',C.frame).attr('stroke-width',.8);
+    svg.append('path').attr('d',`M${px},${py+8} C ${px},${py+60} ${IX+IW/2},${IY-40} ${IX+IW/2},${IY}`).attr('fill','none').attr('stroke',C.frame).attr('stroke-dasharray','3 4');
+    const pl=land.features.find(f=>f.id==='616');
+    const pproj=d3.geoMercator().fitExtent([[IX+30,IY+58],[IX+IW-30,IY+IH-26]],pl);
+    const ppath=d3.geoPath(pproj);
+    inset.append('path').datum(pl).attr('d',ppath).attr('fill',C.land).attr('fill-opacity',C.landOp+.06).attr('stroke',C.stroke).attr('stroke-width',.8);
+    inset.append('text').attr('class','label').attr('x',IX+18).attr('y',IY+24).attr('fill',C.accent).text('Polonia · Gira 2026');
+    inset.append('text').attr('class','name').attr('font-size',17).attr('x',IX+18).attr('y',IY+45).attr('fill',C.text).text('Cuatro ciudades, una gira');
+
+    const cities=[
+      {name:'Varsovia',c:[21.01,52.23],what:'Embajada Argentina',dx:10,dy:-7},
+      {name:'Kielce',c:[20.63,50.87],what:'Masterclass',dx:10,dy:-7},
+      {name:'Cracovia',c:[19.94,50.06],what:'Función y milonga',dx:-10,dy:-7,anchor:'end'},
+      {name:'Łukowica',c:[20.48,49.60],what:'Taller y función',dx:10,dy:15}
+    ];
+    const g=inset.selectAll('g.city').data(cities).join('g').attr('transform',d=>{const [x,y]=pproj(d.c);return `translate(${x},${y})`});
+    g.append('circle').attr('r',4.5).attr('fill',C.accent);
+    g.append('text').attr('class','name').attr('font-size',14).attr('x',d=>d.dx).attr('y',d=>d.dy).attr('text-anchor',d=>d.anchor||'start').attr('fill',C.text).text(d=>d.name);
+    g.append('text').attr('class','label').attr('x',d=>d.dx).attr('y',d=>d.dy+13).attr('text-anchor',d=>d.anchor||'start').attr('fill',C.accent).text(d=>d.what);
+
+    svg.append('text').attr('class','label').attr('x',IX).attr('y',H-14).attr('fill',C.muted).text('2 continentes · 2 países · 5 ciudades · 2025–2026');
+  } else {
+    // ---- world (left) — unchanged desktop layout, built for a ~1328px column.
+    const W=1328,H=560;
+    svg.attr('viewBox',`0 0 ${W} ${H}`);
+    const proj=d3.geoNaturalEarth1().rotate([-10,0]).fitExtent([[0,20],[900,H-40]],{type:'Sphere'});
+    const path=d3.geoPath(proj);
+    const world=svg.append('g');
+    world.append('path').datum({type:'Sphere'}).attr('d',path).attr('fill','none').attr('stroke',C.stroke).attr('stroke-width',.6);
+    world.selectAll('path.l').data(land.features).join('path').attr('d',path).attr('fill',C.land).attr('fill-opacity',C.landOp).attr('stroke',C.stroke).attr('stroke-width',.5);
+
+    const line=d3.geoPath(proj);
+    [[mumbai,0],[poland,.5]].forEach(([t,d])=>world.append('path').datum({type:'LineString',coordinates:[home,t]}).attr('d',line).attr('class','arc').attr('stroke',C.accent).style('animation-delay',d+'s'));
+
+    const [hx,hy]=proj(home);
+    world.append('circle').attr('cx',hx).attr('cy',hy).attr('r',7).attr('fill',C.home);
+    world.append('circle').attr('cx',hx).attr('cy',hy).attr('r',16).attr('fill','none').attr('stroke',C.home).attr('stroke-opacity',.4);
+    world.append('text').attr('class','name').attr('font-size',20).attr('x',hx+24).attr('y',hy+7).attr('fill',C.text).text('Mar del Plata');
+    world.append('text').attr('class','label').attr('x',hx+24).attr('y',hy+26).attr('fill',C.muted).text('Sede · Argentina');
+
+    const [mx,my]=proj(mumbai);
+    const gm=world.append('g').attr('class','city').attr('transform',`translate(${mx},${my})`);
+    gm.append('circle').attr('r',18).attr('fill','transparent');
+    gm.append('circle').attr('class','dot').attr('r',5).attr('fill',C.accent);
+    gm.append('text').attr('class','name').attr('font-size',17).attr('x',14).attr('y',-4).attr('fill',C.text).text('Mumbai');
+    gm.append('text').attr('class','label tip').attr('x',14).attr('y',14).attr('fill',C.accent).text('Festival Mood Indigo · IIT Bombay');
+
+    const [px,py]=proj(poland);
+    world.append('circle').attr('cx',px).attr('cy',py).attr('r',5).attr('fill',C.accent);
+    world.append('circle').attr('cx',px).attr('cy',py).attr('r',13).attr('fill','none').attr('stroke',C.accent).attr('stroke-opacity',.5);
+    world.append('text').attr('class','name').attr('font-size',17).attr('x',px-14).attr('y',py-12).attr('text-anchor','end').attr('fill',C.text).text('Polonia');
+    world.append('text').attr('class','label').attr('x',px-14).attr('y',py+5).attr('text-anchor','end').attr('fill',C.muted).text('4 ciudades · ver detalle');
+
+    // ---- Poland inset (right)
+    const IX=940, IY=40, IW=368, IH=H-80;
+    const inset=svg.append('g');
+    inset.append('rect').attr('x',IX).attr('y',IY).attr('width',IW).attr('height',IH).attr('fill',C.insetBg).attr('stroke',C.frame).attr('stroke-width',.8);
+    // connector from world Poland point to inset
+    svg.append('path').attr('d',`M${px+8},${py} C ${px+80},${py} ${IX-60},${IY+IH/2} ${IX},${IY+IH/2}`).attr('fill','none').attr('stroke',C.frame).attr('stroke-dasharray','3 4');
+    const pl=land.features.find(f=>f.id==='616');
+    const pproj=d3.geoMercator().fitExtent([[IX+36,IY+64],[IX+IW-36,IY+IH-36]],pl);
+    const ppath=d3.geoPath(pproj);
+    inset.append('path').datum(pl).attr('d',ppath).attr('fill',C.land).attr('fill-opacity',C.landOp+.06).attr('stroke',C.stroke).attr('stroke-width',.8);
+    inset.append('text').attr('class','label').attr('x',IX+24).attr('y',IY+30).attr('fill',C.accent).text('Polonia · Gira 2026');
+    inset.append('text').attr('class','name').attr('font-size',22).attr('x',IX+24).attr('y',IY+52).attr('fill',C.text).text('Cuatro ciudades, una gira');
+
+    const cities=[
+      {name:'Varsovia',c:[21.01,52.23],what:'Función · Embajada Argentina',dx:12,dy:-8},
+      {name:'Kielce',c:[20.63,50.87],what:'Masterclass con el elenco',dx:12,dy:-8},
+      {name:'Cracovia',c:[19.94,50.06],what:'Función y milonga abierta',dx:-12,dy:-8,anchor:'end'},
+      {name:'Łukowica',c:[20.48,49.60],what:'Taller y función',dx:12,dy:16}
+    ];
+    const g=inset.selectAll('g.city').data(cities).join('g').attr('class','city').attr('transform',d=>{const [x,y]=pproj(d.c);return `translate(${x},${y})`});
+    g.append('circle').attr('r',18).attr('fill','transparent');
+    g.append('circle').attr('class','dot').attr('r',5).attr('fill',C.accent);
+    g.append('text').attr('class','name').attr('font-size',17).attr('x',d=>d.dx).attr('y',d=>d.dy).attr('text-anchor',d=>d.anchor||'start').attr('fill',C.text).text(d=>d.name);
+    g.append('text').attr('class','label tip').attr('x',d=>d.dx).attr('y',d=>d.dy+17).attr('text-anchor',d=>d.anchor||'start').attr('fill',C.accent).text(d=>d.what);
+
+    svg.append('text').attr('class','label').attr('x',0).attr('y',H-8).attr('fill',C.muted).text('2 continentes · 2 países · 5 ciudades · 2025–2026');
+  }
+})();
+</script>
+</body>
+</html>
