@@ -2,6 +2,7 @@ import { color, font } from "@/design/tokens";
 import { siteConfig } from "@/content/site";
 import { PlaceholderImage, ExampleBadge } from "@/components/ui/placeholder-image";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { Reveal } from "@/components/ui/reveal";
 
 /**
  * Dirección 1a — Noche. Sección "Talleres y formación" del handoff
@@ -13,77 +14,95 @@ export function WorkshopsA() {
   return (
     <div className="grid md:grid-cols-2" style={{ background: color.noche, color: color.hueso }}>
       <div
-        className="px-6 py-16 md:px-14 md:py-24"
+        className="px-6 py-20 md:px-14 lg:px-20 md:py-28"
         style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}
       >
-        <Eyebrow color={color.ambar} marginBottom={22}>
-          Talleres y formación · Mar del Plata
-        </Eyebrow>
-        <h1
-          style={{
-            margin: 0,
-            fontFamily: font.display,
-            fontWeight: 400,
-            fontSize: "clamp(36px, 5vw, 56px)",
-            lineHeight: 1.02,
-            letterSpacing: "-.01em",
-          }}
-        >
-          Aprendé con quienes lo bailan cada noche
-        </h1>
-        <p
-          style={{
-            margin: "30px 0 0",
-            maxWidth: 500,
-            fontFamily: font.body,
-            fontSize: 17.5,
-            lineHeight: 1.7,
-            color: "rgba(243,237,228,.76)",
-          }}
-        >
-          Masterclasses y talleres dictados por el elenco, formado en la escuela de Emmanuel Marín.
-          Los mismos talleres que dimos en la gira por Polonia, ahora en Mar del Plata.
-        </p>
-        <div className="flex-wrap" style={{ display: "flex", alignItems: "center", gap: 30, marginTop: 40 }}>
-          <a
-            href={siteConfig.social.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
+        <Reveal>
+          <Eyebrow color={color.ambar} marginBottom={22}>
+            Talleres y formación · Mar del Plata
+          </Eyebrow>
+          <h1
             style={{
-              background: color.ambar,
-              color: color.noche,
-              boxShadow: "0 22px 50px rgba(184,121,46,.3)",
-              fontFamily: font.nav,
-              fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: ".18em",
-              textTransform: "uppercase",
-              padding: "19px 36px",
-              whiteSpace: "nowrap",
+              margin: 0,
+              fontFamily: font.display,
+              fontWeight: 320,
+              fontSize: "clamp(30px, 4.2vw, 44px)",
+              lineHeight: 1.02,
+              letterSpacing: "-.01em",
             }}
           >
-            Consultar por Instagram
-          </a>
-          <div style={{ fontFamily: font.body, fontSize: 13.5, color: "rgba(243,237,228,.6)" }}>
-            {siteConfig.social.instagramHandle}
+            Aprendé con quienes lo bailan cada noche
+          </h1>
+          <p
+            style={{
+              margin: "30px 0 0",
+              maxWidth: 500,
+              fontFamily: font.body,
+              fontSize: 16,
+              lineHeight: 1.7,
+              color: "rgba(243,237,228,.76)",
+            }}
+          >
+            Masterclasses y talleres dictados por el elenco, formado en la escuela de Emmanuel Marín.
+            Los mismos talleres que dimos en la gira por Polonia, ahora en Mar del Plata.
+          </p>
+          <div className="flex-wrap" style={{ display: "flex", alignItems: "center", gap: 30, marginTop: 40 }}>
+            <a
+              href={siteConfig.social.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                background: color.ambar,
+                color: color.noche,
+                boxShadow: "0 22px 50px rgba(184,121,46,.3)",
+                fontFamily: font.nav,
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: ".18em",
+                textTransform: "uppercase",
+                padding: "19px 36px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Consultar por Instagram
+            </a>
+            <div style={{ fontFamily: font.body, fontSize: 13.5, color: "rgba(243,237,228,.6)" }}>
+              {siteConfig.social.instagramHandle}
+            </div>
           </div>
-        </div>
-        <div style={{ marginTop: 26, fontFamily: font.body, fontSize: 13, color: "rgba(243,237,228,.4)" }}>
-          talleres@tangofuria.com · WhatsApp +54 223 000 0000
-          <ExampleBadge />
-        </div>
+          <div style={{ marginTop: 26, fontFamily: font.body, fontSize: 13, color: "rgba(243,237,228,.4)" }}>
+            talleres@tangofuria.com · WhatsApp +54 223 000 0000
+            <ExampleBadge />
+          </div>
+        </Reveal>
       </div>
-      <div className="grid grid-cols-2 gap-2 p-2">
-        <div className="relative row-span-2">
-          <PlaceholderImage label="Manos en el abrazo, luz de ventana" dark fill />
+      <Reveal delay={150} className="grid grid-cols-2 gap-2 p-2">
+        <div className="group relative row-span-2 overflow-hidden">
+          <PlaceholderImage
+            label="Manos en el abrazo, luz de ventana"
+            dark
+            fill
+            className="transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
         </div>
-        <div className="relative aspect-square">
-          <PlaceholderImage label="Pies en el piso de madera" dark fill />
+        <div className="group relative aspect-square overflow-hidden">
+          <PlaceholderImage
+            label="Pies en el piso de madera"
+            dark
+            fill
+            className="transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
         </div>
-        <div className="relative aspect-square">
-          <PlaceholderImage label="Clase en ronda, corrección de postura" dark fill />
+        <div className="group relative aspect-square overflow-hidden">
+          <PlaceholderImage
+            label="Clase en ronda, corrección de postura"
+            dark
+            fill
+            className="transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }

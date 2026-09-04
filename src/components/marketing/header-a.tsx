@@ -35,7 +35,7 @@ export function HeaderA() {
       }}
       className="md:!px-14"
     >
-      <Logo size={19} />
+      <Logo size={27} />
 
       <nav className="hidden lg:flex" style={{ gap: 28, fontSize: 12, letterSpacing: ".15em", textTransform: "uppercase" }}>
         {navLinks.map((link) => {

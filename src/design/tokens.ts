@@ -15,10 +15,13 @@ export const color = {
   estrella: "#C9A227",
 } as const;
 
+// display es Fraunces variable (incluido el H1 del hero) — el peso
+// estándar del sitio es 320, que no es un paso fijo típico, por eso
+// Fraunces se carga con weight:"variable" en layout.tsx.
 export const font = {
   display: "var(--font-fraunces), Fraunces, serif",
   nav: "var(--font-archivo), Archivo, sans-serif",
-  body: "var(--font-plex), 'IBM Plex Sans', sans-serif",
+  body: "var(--font-manrope), Manrope, sans-serif",
 } as const;
 
 export const easing = "cubic-bezier(.2,.7,.2,1)";

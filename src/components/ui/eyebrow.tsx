@@ -6,6 +6,10 @@ import type { CSSProperties } from "react";
  * sitio ("Temporada 2026", "La compañía", "Reconocimientos"...). Antes cada
  * archivo repetía este mismo objeto de estilos — un solo lugar para
  * ajustar tamaño/tracking en todo el sitio de una vez.
+ *
+ * Usa font.nav (Archivo) a propósito, no font.body: funciona como remate
+ * de título, no como texto de lectura — así el cambio de fuente del cuerpo
+ * no la mueve.
  */
 export function Eyebrow({
   children,
@@ -21,7 +25,7 @@ export function Eyebrow({
   return (
     <div
       style={{
-        fontFamily: font.body,
+        fontFamily: font.nav,
         fontSize: 11.5,
         letterSpacing: ".3em",
         textTransform: "uppercase",

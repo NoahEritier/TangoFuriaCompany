@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Fraunces, Archivo, IBM_Plex_Sans } from "next/font/google";
+import { Fraunces, Archivo, Manrope } from "next/font/google";
 import "./globals.css";
 
+// Fuente de todos los títulos del sitio, hero incluido (font.display en
+// tokens.ts). Variable en vez de pesos fijos — el cliente pidió
+// específicamente 320 de weight, que no es un paso estándar (400/500/600),
+// así que hace falta el eje variable completo de Fraunces para pedir ese
+// valor exacto.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: "variable",
   style: ["normal", "italic"],
 });
 
@@ -15,8 +20,10 @@ const archivo = Archivo({
   weight: ["400", "500", "600"],
 });
 
-const plex = IBM_Plex_Sans({
-  variable: "--font-plex",
+// Cuerpo de texto — reemplazó a Work Sans por decisión del cliente tras
+// comparar 10 opciones en /preview-texto.
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
@@ -78,7 +85,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${fraunces.variable} ${archivo.variable} ${plex.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${archivo.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <script

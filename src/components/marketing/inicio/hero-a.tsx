@@ -8,7 +8,7 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 /** Dirección 1a — Noche. Hero full-bleed con overlay oscuro. */
 export function HeroA() {
   return (
-    <div style={{ position: "relative", height: "clamp(520px, 92vh, 900px)", overflow: "hidden" }}>
+    <div style={{ position: "relative", height: "clamp(460px, 74vh, 720px)", overflow: "hidden" }}>
       <Image
         src={photo.ensembleStudioLift}
         alt="Elenco de Tango Furia Company en escena"
@@ -36,10 +36,10 @@ export function HeroA() {
           style={{
             margin: 0,
             fontFamily: font.display,
-            fontWeight: 500,
-            fontSize: "clamp(56px, 12vw, 168px)",
-            lineHeight: 0.86,
-            letterSpacing: ".04em",
+            fontWeight: 320,
+            fontSize: "clamp(56px, 11vw, 144px)",
+            lineHeight: 0.92,
+            letterSpacing: ".02em",
             color: color.hueso,
             textTransform: "uppercase",
           }}
@@ -48,13 +48,13 @@ export function HeroA() {
           <br />
           Furia
         </h1>
-        <div className="flex-col md:flex-row md:items-end md:justify-between" style={{ display: "flex", gap: 40, marginTop: 26 }}>
+        <div className="flex-col md:flex-row md:items-end md:justify-between" style={{ display: "flex", gap: 28, marginTop: 20 }}>
           <p
             style={{
               margin: 0,
               maxWidth: 520,
               fontFamily: font.body,
-              fontSize: 19,
+              fontSize: 17,
               lineHeight: 1.55,
               color: "rgba(243,237,228,.82)",
             }}
@@ -63,7 +63,7 @@ export function HeroA() {
           </p>
           <Link
             href="/espectaculos"
-            className="mt-6 md:mt-0"
+            className="mt-5 md:mt-0 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.03] active:scale-[0.98]"
             style={{
               background: color.furia,
               color: color.hueso,
@@ -72,7 +72,7 @@ export function HeroA() {
               fontWeight: 600,
               letterSpacing: ".18em",
               textTransform: "uppercase",
-              padding: "20px 40px",
+              padding: "18px 36px",
               whiteSpace: "nowrap",
               boxShadow: "0 22px 50px rgba(138,19,50,.45)",
               display: "inline-block",
